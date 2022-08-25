@@ -11,8 +11,7 @@
 </template>
 
 <script setup>
-import Header from '../components/Header.vue';
-
+  import Header from "../components/Header.vue";
 </script>
 
 <style lang="scss" scoped>
@@ -20,17 +19,14 @@ import Header from '../components/Header.vue';
     // display: flex;
     flex-direction: column;
     min-height: 100vh;
-    background-color: #ccc;
   }
-  .logo {
-    height: 6em;
-    padding: 1.5em;
-    will-change: filter;
-  }
-  .logo:hover {
-    filter: drop-shadow(0 0 2em #646cffaa);
-  }
-  .logo.vue:hover {
-    filter: drop-shadow(0 0 2em #42b883aa);
+  .layout {
+    background: rgb(251, 230, 253);
+    background: linear-gradient(
+      44deg,
+      rgba(251, 230, 253, 1) 0%,
+      rgba(104, 153, 228, 1) 84%,
+      rgba(99, 183, 235, 1) 100%
+    );
   }
 </style>
