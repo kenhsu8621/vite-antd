@@ -2,7 +2,7 @@
   <div class="navbar">
     <a-row>
       <a-col :span="6" class="left">
-        <a href="" class="kh-logo"> <img src="../assets/images/kh-frame.svg" alt="kh-logo" width="50" /> </a>
+        <a class="kh-logo"> <img src="../assets/images/kh-frame.svg" alt="kh-logo" width="50" /> </a>
       </a-col>
       <a-col :span="12" class="center">
         <a-space>
@@ -73,7 +73,7 @@
     z-index: 9;
     width: 100%;
     height: 70px;
-    background-color: $bgHalfOpacity;
+    background-color: $bgThreeQuartersOpacity;
     filter: blur(0px);
     box-shadow: $mainBoxShadow;
     .ant-col {
@@ -104,10 +104,12 @@
         top: 16px;
         right: 15px;
         color: $darkgrey;
-        background-color: $bgHalfOpacity;
+        background-color: $bgThreeQuartersOpacity;
         border-radius: 19px;
-        border: 1px solid $darkgrey;
+        border: 1px solid #ddd;
         transition: all 0.2s ease-in-out;
+        box-shadow: 0 2px 0 rgb(0 0 0 / 2%);
+        cursor: pointer;
 
         svg {
           margin-top: 2px;
@@ -137,18 +139,18 @@
             font-size: 12px;
             border-radius: 15px;
             cursor: pointer;
+            box-shadow: 0 2px 0 rgb(0 0 0 / 2%);
           }
 
           .btn-active {
-            color: #fff;
-            background-color: $darkgrey;
-            border: 1px solid $darkgrey;
+            background-color: $activeBtn;
+            border: 1px solid #ddd;
           }
 
           .btn-inactive {
             color: $darkgrey;
             background-color: transparent;
-            border: 1px solid $darkgrey;
+            border: 1px solid #ddd;
           }
         }
       }

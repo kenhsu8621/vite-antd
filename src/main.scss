@@ -10,7 +10,7 @@
     min-width: 320px;
     min-width: 100vw;
     min-height: 100vh;
-
+    overflow-x: hidden; /* Hide horizontal scrollbar */
     font-family: jfOpenhuninn, Courier, monospace;
   }
 
