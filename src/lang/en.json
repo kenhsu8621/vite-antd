@@ -1,0 +1,18 @@
+{
+    "header": {
+        "home": "home",
+        "catagories": "Catagories",
+        "about": "about",
+        "links": "Links"
+    },
+    "model_viewer": {
+        "hello": "Hello",
+        "color_picker": "Color Picker",
+        "model_select": "Model Select",
+        "model_tools": "Model Tools",
+        "hints": "Hints",
+        "rotate": "Rotate: Left-click",
+        "move": "Move : Right-click",
+        "zoom": "Zoom: Mid-click / scroll"
+    }
+}
