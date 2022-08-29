@@ -5,29 +5,26 @@
         <a class="kh-logo"> <img src="../assets/images/kh-frame.svg" alt="kh-logo" width="50" /> </a>
       </a-col>
       <a-col :span="12" class="center">
-        <a-space>
-          <a class="nav-link">Home</a>
-          <a class="nav-link">Catagories</a>
-          <a class="nav-link">About</a>
-          <a class="nav-link">Links</a>
+        <a-space :size="30">
+          <a class="nav-link">{{ $t("header.home") }}</a>
+          <a class="nav-link">{{ $t("header.catagories") }}</a>
+          <a class="nav-link">{{ $t("header.about") }}</a>
+          <a class="nav-link">{{ $t("header.links") }}</a>
         </a-space>
       </a-col>
       <a-col :span="6" class="right">
         <div class="lang-select" :class="{ expand: expandLangList }">
-          <GlobalOutlined
-            :style="{ fontSize: '20px', position: 'absolute', top: '8px', right: '8px' }"
-            @click="toggleLangList"
-          />
+          <GlobalOutlined class="lang-icon" @click="toggleLangList" />
           <div class="current-lang" v-if="!showLangList">
-            <span class="tw" v-if="language == 0">中文</span>
-            <span class="en" v-if="language == 1">EN</span>
+            <span class="tw" v-if="locale == 'tw'">中文</span>
+            <span class="en" v-if="locale == 'en'">EN</span>
           </div>
 
           <div class="lang-list" v-if="showLangList">
-            <button class="tw" :class="language == 0 ? 'btn-active' : 'btn-inactive'" @click="setActiveLang(0)">
+            <button class="tw" :class="locale == 'tw' ? 'btn-active' : 'btn-inactive'" @click="setActiveLang('tw')">
               中文
             </button>
-            <button class="en" :class="language == 1 ? 'btn-active' : 'btn-inactive'" @click="setActiveLang(1)">
+            <button class="en" :class="locale == 'en' ? 'btn-active' : 'btn-inactive'" @click="setActiveLang('en')">
               English
             </button>
           </div>
@@ -38,18 +35,30 @@
 </template>
 
 <script setup>
-  import { ref } from "vue";
-  import { GlobalOutlined, AppstoreOutlined, SettingOutlined } from "@ant-design/icons-vue";
+  import { watch, onMounted, ref } from "vue";
+  import { GlobalOutlined } from "@ant-design/icons-vue";
   const showLangList = ref(false);
   const expandLangList = ref(false);
-  const language = ref(0);
+  const locale = ref("");
+
+  onMounted(() => {
+    locale.value = localStorage.getItem("locale") ?? "tw";
+  });
+
+  watch(locale, (newlocale) => {
+    console.log(newlocale);
+    localStorage.setItem("locale", newlocale);
+  });
 
   function setActiveLang(lang) {
-    language.value = lang;
     expandLangList.value = false;
     showLangList.value = false;
-    // this.$cookies.set("language", lang);
-    // return history.go(0);
+    if (locale.value == lang) return;
+    locale.value = lang;
+    localStorage.setItem("locale", lang === 0 ? "tw" : "en");
+    setTimeout(() => {
+      history.go(0);
+    }, 300);
   }
 
   function toggleLangList() {
@@ -60,7 +69,7 @@
       expandLangList.value = true;
       setTimeout(() => {
         showLangList.value = true;
-      }, 200);
+      }, 300);
     }
   }
 </script>
@@ -98,6 +107,7 @@
     .right {
       .lang-select {
         width: 70px;
+        height: 37px;
         line-height: 22px;
         position: absolute;
         padding: 6px;
@@ -107,14 +117,27 @@
         background-color: $bgThreeQuartersOpacity;
         border-radius: 19px;
         border: 1px solid #ddd;
-        transition: all 0.2s ease-in-out;
-        box-shadow: 0 2px 0 rgb(0 0 0 / 2%);
+        transition: $mainTransition;
+        box-shadow: $antBtnBoxShadow;
         cursor: pointer;
 
         svg {
           margin-top: 2px;
           margin-right: 2px;
           font-size: 20px;
+        }
+
+        .lang-icon {
+          font-size: 20px;
+          position: absolute;
+          top: 8px;
+          right: 8px;
+          border-radius: 50%;
+          transition: $mainTransition;
+
+          &:hover {
+            background-color: $mainLightgreen;
+          }
         }
 
         .current-lang {
@@ -139,11 +162,15 @@
             font-size: 12px;
             border-radius: 15px;
             cursor: pointer;
-            box-shadow: 0 2px 0 rgb(0 0 0 / 2%);
+            box-shadow: $antBtnBoxShadow;
+
+            &:hover {
+              background-color: $mainLightgreen;
+            }
           }
 
           .btn-active {
-            background-color: $activeBtn;
+            background-color: $mainLightgreen;
             border: 1px solid #ddd;
           }
 
@@ -157,7 +184,11 @@
 
       .expand {
         width: 160px;
-        transition: all 0.2s ease-in-out;
+        transition: $mainTransition;
+
+        &:hover {
+          background-color: $bgThreeQuartersOpacity;
+        }
       }
     }
   }
