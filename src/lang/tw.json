@@ -6,13 +6,13 @@
         "links": "連結"
     },
     "model_viewer": {
-        "hello": "哈囉",
+        "hello": "哈囉 !",
         "color_picker": "顏色選擇",
         "model_select": "模型選擇",
         "model_tools": "模型工具",
         "hints": "操作提示",
         "rotate": "旋轉: 點擊左鍵",
-        "move": "移動(平移) : 點擊右鍵",
+        "move": "平移: 點擊右鍵",
         "zoom": "縮放: 按住中鍵/滾輪"
     }
 }
