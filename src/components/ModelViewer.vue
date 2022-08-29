@@ -1,10 +1,11 @@
 <template>
   <div class="model-viewer" id="modelViewer" ref="modelViewer">
     <!-- <div class="transition-mask" refs="transitionMask" v-show="isChanging"></div> -->
-    <a-spin size="large" v-show="isChanging" />
+    <!-- <a-spin size="large" v-show="isChanging" /> -->
+    <CustomSpin v-show="isChanging" :size="30"></CustomSpin>
     <div class="model-canvas" ref="modelCanvas" @mousedown="setClicked()" @mouseup="showHints = false"></div>
     <div class="hello" ref="hello" v-if="showHello">
-      <span style="color: #fff">Hello</span>
+      <span style="color: #fff">{{ $t("model_viewer.hello") }}</span>
       <!-- <span style="color: #c4f9f3">e</span>
       <span style="color: #c4f9f3">l</span>
       <span style="color: #c4f9f3">l</span>
@@ -14,7 +15,7 @@
 
     <div class="tool-box" ref="toolBox">
       <div class="color-picker">
-        <div class="tool-title">Color Picker</div>
+        <div class="tool-title">{{ $t("model_viewer.color_picker") }}</div>
         <a-space class="color-picker-container">
           <div class="color-picker-grid" v-for="color in colorList">
             <button
@@ -29,19 +30,19 @@
       </div>
 
       <div class="model-select">
-        <div class="tool-title">Model Select</div>
+        <div class="tool-title">{{ $t("model_viewer.model_select") }}</div>
         <a-space>
-          <a-button shape="round" @click="init(0)" :class="{ 'active-model': currentModel == 0 }"
+          <a-button shape="round" @click="initializeModel(0)" :class="{ 'active-model': currentModel == 0 }"
             ><i class="devicon-vuejs-plain"></i
           ></a-button>
-          <a-button shape="round" @click="init(1)" :class="{ 'active-model': currentModel == 1 }"
+          <a-button shape="round" @click="initializeModel(1)" :class="{ 'active-model': currentModel == 1 }"
             ><i class="devicon-threejs-original"></i
           ></a-button>
         </a-space>
       </div>
 
       <div class="model-tools">
-        <div class="tool-title">Model Tools</div>
+        <div class="tool-title">{{ $t("model_viewer.model_tools") }}</div>
         <a-space class="model-tools-container">
           <a-button shape="round" @click="toggleAnimation">
             <span v-if="isStop"><caret-right-outlined :style="{ fontSize: '20px', paddingLeft: '5px' }" /></span>
@@ -58,27 +59,27 @@
     </div>
 
     <div class="hint-box" v-if="showHints">
-      <div class="hint-title">Hints</div>
+      <div class="hint-title">{{ $t("model_viewer.hints") }}</div>
       <div class="hint-item">
-        <redo-outlined :style="{ fontSize: '14px', color: '#14cab5' }" /><span>Rotate: Left-click</span>
+        <redo-outlined :style="{ fontSize: '14px', color: '#14cab5' }" /><span>{{ $t("model_viewer.rotate") }}</span>
       </div>
       <div class="hint-item">
-        <drag-outlined :style="{ fontSize: '14px', color: '#14cab5' }" /><span>Move : Right-click</span>
+        <drag-outlined :style="{ fontSize: '14px', color: '#14cab5' }" /><span>{{ $t("model_viewer.move") }}</span>
       </div>
       <div class="hint-item">
-        <zoom-in-outlined :style="{ fontSize: '14px', color: '#14cab5' }" /><span>Zoom: Mid-click / scroll</span>
+        <zoom-in-outlined :style="{ fontSize: '14px', color: '#14cab5' }" /><span>{{ $t("model_viewer.zoom") }}</span>
       </div>
     </div>
 
     <div class="technique-list" ref="techiqueList">
       <label>made with</label>
       <a href="https://threejs.org/" target="_blank">
-        <a-tooltip title="threejs" color="rgba(255, 255, 255, 0.2)">
+        <a-tooltip title="three.js" color="rgba(255, 255, 255, 0.2)">
           <i class="devicon-threejs-original"></i> </a-tooltip
       ></a>
       <span class="divider">+</span>
       <a href="https://www.rhino3d.com/" target="_blank">
-        <a-tooltip title="rhino" color="rgba(255, 255, 255, 0.2)">
+        <a-tooltip title="rhino3d" color="rgba(255, 255, 255, 0.2)">
           <img class="custom-icon" src="../assets/images/rhino.svg" alt="kh-logo" /> </a-tooltip
       ></a>
       <span class="divider">+</span>
@@ -95,7 +96,6 @@
   import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
   import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
   import { RoomEnvironment } from "three/examples/jsm/environments/RoomEnvironment.js";
-  import { defineComponent, nextTick } from "vue";
   import {
     CaretRightOutlined,
     PauseOutlined,
@@ -105,6 +105,8 @@
     DragOutlined,
     ZoomInOutlined,
   } from "@ant-design/icons-vue";
+  import CustomSpin from "./CustomSpin.vue";
+  import { defineComponent, nextTick } from "vue";
 
   let mixer, clips, gridHelper, clock;
 
@@ -117,6 +119,7 @@
       RedoOutlined,
       DragOutlined,
       ZoomInOutlined,
+      CustomSpin,
     },
     data() {
       return {
@@ -185,11 +188,10 @@
       };
     },
     mounted() {
-      this.init(0);
+      this.initializeModel(0);
     },
     methods: {
-      // 3d model functions
-      init(modelType) {
+      initializeModel(modelType) {
         nextTick(() => {
           this.clearPreviousModel();
           clock = new THREE.Clock();
@@ -390,17 +392,16 @@
 
     .hello {
       position: absolute;
+      width: 600px;
       top: 10vh;
       left: 0;
       right: 0;
-      margin-left: auto;
-      margin-right: auto;
-      width: 600px;
+      margin: 0 auto;
       text-align: center;
       font-size: 6vw;
-      color: #4cf7e3;
-      color: #fff;
-      text-shadow: #bbb 0px 2px 3px;
+      background: linear-gradient(0deg, #71efb6, #a2d8cf);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
       cursor: default;
 
       @media (max-width: 1920px) {
@@ -438,7 +439,7 @@
               height: 25px;
               border-radius: 50%;
               border: 2px solid #ddd;
-              box-shadow: 0 2px 0 rgb(0 0 0 / 2%);
+              box-shadow: $antBtnBoxShadow;
             }
           }
         }
@@ -463,7 +464,7 @@
             border: 1px solid #ddd;
           }
           &:hover {
-            background: $activeBtn;
+            background: $mainLightgreen;
           }
 
           i {
@@ -473,7 +474,7 @@
           }
         }
         .active-model {
-          background: $activeBtn;
+          background: $mainLightgreen;
         }
       }
     }
@@ -532,19 +533,21 @@
     .fade-in-left {
       transform: translateX(3vw);
       opacity: 1;
-      transition: ease-in-out 1.5s;
+      transition: all ease-in-out 1.5s;
     }
 
     .fade-in-right {
       transform: translateX(-3vw);
       opacity: 1;
-      transition: ease-in-out 1.5s;
+      transition: all ease-in-out 1.5s;
     }
+
     .fade-out {
       transform: translateY(-5vh);
       opacity: 0;
-      transition: ease-in-out 1s;
+      transition: all ease-in-out 1s;
     }
+
     .transition-mask {
       position: absolute;
       top: 0;
@@ -552,13 +555,16 @@
       left: 0;
       right: 0;
       background: rgba(255, 255, 255, 0.5);
-      transition: all 1s;
+      transition: all ease-in-out 1s;
     }
 
-    .ant-spin {
+    .custom-spin {
       position: absolute;
-      top: 45%;
-      left: 50vw;
+      width: 50px;
+      top: 45vh;
+      left: 0;
+      right: 0;
+      margin: 0 auto;
     }
   }
 </style>
