@@ -1,12 +1,22 @@
 import { createRouter, createWebHistory } from "vue-router"
-import Home from "/src/views/Home.vue"
 
 let history = createWebHistory()
-let routes = [
+const routes = [
   {
     path: "/",
     name: "Home",
-    component: Home
+    component: () => import("/src/views/Home.vue")
+  },
+  // finally the default route, when none of the above matches: 
+  {
+    path: "/404",
+    name: "PageNotFound",
+    component: () => import("/src/views/PageNotFound.vue")
+  },
+  {
+    path: "/:pathMatch(.*)",
+    name: "PageNotFound",
+    component: () => import("/src/views/PageNotFound.vue")
   }
 ]
 
