@@ -26,12 +26,16 @@
 
       <div class="model-select">
         <div class="tool-title">{{ $t("model_viewer.model_select") }}</div>
-        <a-space>
+
+        <a-space class="model-select-container">
           <a-button shape="round" @click="initializeModel(0)" :class="{ 'active-model': currentModel == 0 }"
             ><i class="devicon-vuejs-plain"></i
           ></a-button>
           <a-button shape="round" @click="initializeModel(1)" :class="{ 'active-model': currentModel == 1 }"
             ><i class="devicon-threejs-original"></i
+          ></a-button>
+          <a-button shape="round" :class="{ 'active-model': currentModel == 2 }"
+            ><i class="devicon-vscode-plain"></i
           ></a-button>
         </a-space>
       </div>
@@ -220,7 +224,6 @@
           // 建立場景
           const scene = new THREE.Scene();
           const renderer = new THREE.WebGLRenderer({ antialias: true });
-          // renderer.setSize(this.$refs.modelCanvas.clientWidth, this.$refs.modelCanvas.clientHeight);
           renderer.setSize(this.$refs.modelCanvas.clientWidth, this.$refs.modelCanvas.clientWidth / 2);
           // renderer.toneMapping = THREE.ReinhardToneMapping;
           // renderer.toneMappingExposure = 2.3;
@@ -245,9 +248,7 @@
           const loader = new GLTFLoader();
           let model;
 
-          const modelSrc = ["/static/models/vue.glb", "/static/models/threejs.glb"];
-          // const modelSrc = "/static/models/vue.glb";
-          // const modelSrc = "/static/models/sb.glb";
+          const modelSrc = ["/static/models/vue.glb", "/static/models/threejs.glb", "/static/models/McLaren.glb"];
           this.currentModel = modelType;
           loader.load(
             // resource URL
@@ -522,6 +523,7 @@
         padding: 10px 0;
         border-top: 1px solid #ddd;
 
+        .model-select-container,
         .model-tools-container {
           display: grid;
           grid-template-columns: 1fr 1fr;

@@ -53,7 +53,7 @@
         rgb(24, 252, 176)
       );
       background-size: 500% 500%;
-      animation: gradient 10s ease-in-out infinite alternate;
+      animation: gradient 20s ease-in-out infinite alternate;
 
       @keyframes gradient {
         0% {
