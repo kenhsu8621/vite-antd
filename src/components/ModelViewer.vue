@@ -2,12 +2,12 @@
   <div class="model-viewer" id="modelViewer" ref="modelViewer">
     <!-- <div class="transition-mask" refs="transitionMask" v-show="isChanging"></div> -->
     <CustomSpin v-show="isChanging" :size="30"></CustomSpin>
-    <div class="model-canvas" ref="modelCanvas" @mousedown="setClicked()" @mouseup="showHints = false"></div>
+    <div class="model-canvas" ref="modelCanvas" @mousedown="setClicked" @mouseup="showHints = false"></div>
     <div class="hello" ref="hello" v-if="showHello">
       <span style="color: #fff">{{ $t("model_viewer.hello") }}</span>
     </div>
 
-    <div class="tool-box" ref="toolBox">
+    <div class="tool-box" ref="toolBox" @mousedown="setGrabbing(true)" @mouseup="setGrabbing(false)">
       <div class="draggable-indicator"></div>
       <div class="color-picker">
         <div class="tool-title">{{ $t("model_viewer.color_picker") }}</div>
@@ -34,7 +34,7 @@
           <a-button shape="round" @click="initializeModel(1)" :class="{ 'active-model': currentModel == 1 }"
             ><i class="devicon-threejs-original"></i
           ></a-button>
-          <a-button shape="round" :class="{ 'active-model': currentModel == 2 }"
+          <a-button shape="round" @click="initializeModel(2)" :class="{ 'active-model': currentModel == 2 }"
             ><i class="devicon-vscode-plain"></i
           ></a-button>
         </a-space>
@@ -97,7 +97,6 @@
     <UpCircleOutlined
       class="scroll-btn scroll-to-top"
       :class="{ 'fade-in': isHideScollDown }"
-      v-if="isClicked"
       @click="scrollToAnchor('top')"
     />
   </div>
@@ -199,14 +198,13 @@
             name: "bg-black",
             value: "#333",
             background:
-              "linear-gradient(45deg, rgba(0,85,83,1) 0%, rgba(27,27,27,1) 40%, rgba(33,33,33,1) 71%, rgba(0,18,119,1) 100%)",
+              "linear-gradient(45deg, rgba(0,85,83,1) 0%, rgba(27,27,27,1) 30%, rgba(33,33,33,1) 71%, rgba(0,18,119,1) 100%)",
           },
         ],
       };
     },
     mounted() {
       this.initializeModel(0); // 初始化3D模型
-
       this.dragElement(this.$refs.toolBox); // 將側邊工具欄設為可拖曳
 
       window.addEventListener("scroll", () => {
@@ -248,7 +246,7 @@
           const loader = new GLTFLoader();
           let model;
 
-          const modelSrc = ["/static/models/vue.glb", "/static/models/threejs.glb", "/static/models/McLaren.glb"];
+          const modelSrc = ["/static/models/vue.glb", "/static/models/threejs.glb", "/static/models/razer.glb"];
           this.currentModel = modelType;
           loader.load(
             // resource URL
@@ -369,7 +367,7 @@
         clips = null;
         gridHelper = null;
       },
-
+      // 使用者至少點擊model canvas一次後才會顯示其他工具
       setClicked() {
         if (!this.disableHints) this.showHints = true;
         this.isClicked = true;
@@ -380,6 +378,12 @@
         setTimeout(() => {
           this.$refs.hello.style.display = "none";
         }, 2000);
+      },
+
+      setGrabbing(isGrabbing) {
+        if (isGrabbing) {
+          this.$refs.toolBox.classList.add("grabbing");
+        } else this.$refs.toolBox.classList.remove("grabbing");
       },
 
       dragElement(elmnt) {
@@ -480,7 +484,7 @@
       left: 30px;
       opacity: 0;
       box-shadow: $mainBoxShadow;
-      cursor: move;
+      cursor: grab;
 
       .tool-title {
         font-size: 16px;
@@ -553,6 +557,9 @@
       }
     }
 
+    .grabbing {
+      cursor: grabbing !important;
+    }
     .hint-box {
       position: absolute;
       width: 220px;
