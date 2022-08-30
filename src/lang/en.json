@@ -1,8 +1,8 @@
 {
     "header": {
-        "home": "home",
+        "home": "Home",
         "catagories": "Catagories",
-        "about": "about",
+        "about": "About",
         "links": "Links"
     },
     "model_viewer": {
@@ -13,6 +13,6 @@
         "hints": "Hints",
         "rotate": "Rotate: Left-click",
         "move": "Move : Right-click",
-        "zoom": "Zoom: Mid-click / scroll"
+        "zoom": "Zoom: Mid-click / Scroll"
     }
 }
