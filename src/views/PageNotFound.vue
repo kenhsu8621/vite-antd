@@ -66,7 +66,7 @@
       .ant-btn {
         height: 40px;
         font-size: 1.5vw;
-        animation: pulse 3s linear infinite alternate;
+        animation: pulse 3s linear infinite;
         color: #fff;
         background: linear-gradient(90deg, #71efb6, #66d0de);
         @keyframes pulse {
@@ -74,24 +74,21 @@
             margin-top: 0px;
           }
           10% {
-            margin-top: 3px;
+            margin-top: 0px;
           }
           20% {
-            margin-top: 0px;
+            margin-top: 3px;
           }
           30% {
             margin-top: 0px;
           }
           40% {
-            margin-top: 3px;
-          }
-          50% {
             margin-top: 0px;
           }
-          60% {
+          50% {
             margin-top: 3px;
           }
-          70% {
+          60% {
             margin-top: 0px;
           }
           100% {
