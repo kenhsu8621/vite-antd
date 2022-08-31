@@ -1,7 +1,7 @@
 <template>
   <div class="layout">
     <div class="text-container">
-      <h1><MehOutlined :style="{ fontSize: '8vw', color: '#71efb6', marginRight: '5px' }" />ops!</h1>
+      <h1><MehOutlined class="meh" />ops!</h1>
       <h2>Page Not Found</h2>
       <h3>There is nothing here...</h3>
       <router-link :to="{ name: 'Home' }">
@@ -26,13 +26,6 @@
     background-repeat: no-repeat;
     background-size: cover;
 
-    img {
-      position: fixed;
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-
     .text-container {
       position: absolute;
       top: 15vh;
@@ -48,6 +41,20 @@
         -webkit-text-fill-color: transparent;
         cursor: default;
         margin-bottom: 0;
+
+        .meh {
+          font-size: 8vw;
+          color: #71efb6;
+          margin-right: 5px;
+          // transform: rotate(-0deg);
+          animation: shake 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes shake {
+          to {
+            transform: rotate(-15deg);
+          }
+        }
       }
 
       h2 {
@@ -65,35 +72,12 @@
 
       .ant-btn {
         height: 40px;
-        font-size: 1.5vw;
-        animation: pulse 3s linear infinite;
+        font-size: 16px;
         color: #fff;
-        background: linear-gradient(90deg, #71efb6, #66d0de);
-        @keyframes pulse {
-          0% {
-            margin-top: 0px;
-          }
-          10% {
-            margin-top: 0px;
-          }
-          20% {
-            margin-top: 3px;
-          }
-          30% {
-            margin-top: 0px;
-          }
-          40% {
-            margin-top: 0px;
-          }
-          50% {
-            margin-top: 3px;
-          }
-          60% {
-            margin-top: 0px;
-          }
-          100% {
-            margin-top: 0px;
-          }
+        background: linear-gradient(90deg, #2bef97, #17c0d6);
+
+        &:hover {
+          background: linear-gradient(90deg, #2bef97, #7173ef);
         }
       }
     }

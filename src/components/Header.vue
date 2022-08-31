@@ -7,12 +7,12 @@
         </a>
       </a-col>
       <a-col :span="12" class="center">
-        <!-- <a-space :size="30"> -->
-        <a class="nav-link">{{ $t("header.home") }}</a>
-        <a class="nav-link">{{ $t("header.catagories") }}</a>
-        <a class="nav-link">{{ $t("header.about") }}</a>
-        <a class="nav-link">{{ $t("header.links") }}</a>
-        <!-- </a-space> -->
+        <a-space :size="30">
+          <a class="nav-link">{{ $t("header.home") }}</a>
+          <a class="nav-link">{{ $t("header.catagories") }}</a>
+          <a class="nav-link">{{ $t("header.about") }}</a>
+          <a class="nav-link">{{ $t("header.links") }}</a>
+        </a-space>
       </a-col>
       <a-col :span="6" class="right">
         <div class="lang-select" :class="{ expand: expandLangList }">
