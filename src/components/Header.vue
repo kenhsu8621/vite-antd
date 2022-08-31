@@ -43,14 +43,6 @@
   const expandLangList = ref(false);
   const locale = ref("");
 
-  onMounted(() => {
-    locale.value = localStorage.getItem("locale") ?? "tw";
-  });
-
-  watch(locale, (newlocale) => {
-    localStorage.setItem("locale", newlocale);
-  });
-
   function setActiveLang(lang) {
     expandLangList.value = false;
     showLangList.value = false;
@@ -73,6 +65,14 @@
       }, 300);
     }
   }
+
+  watch(locale, (newlocale) => {
+    localStorage.setItem("locale", newlocale);
+  });
+
+  onMounted(() => {
+    locale.value = localStorage.getItem("locale") ?? "tw";
+  });
 </script>
 
 <style lang="scss" scoped>

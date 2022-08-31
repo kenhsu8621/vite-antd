@@ -1,17 +1,19 @@
 <template>
   <div class="layout">
-    <!-- <img src="../assets/images/falldown.jpg" alt="Oops!" /> -->
-
     <div class="text-container">
-      <h1>Oops !</h1>
-      <h2>Something went wrong !</h2>
-      <h3>Error 404 Page Not Found</h3>
-      <a-button shape="round"> Back To Home</a-button>
+      <h1><MehOutlined :style="{ fontSize: '8vw', color: '#71efb6', marginRight: '5px' }" />ops!</h1>
+      <h2>Page Not Found</h2>
+      <h3>There is nothing here...</h3>
+      <router-link :to="{ name: 'Home' }">
+        <a-button shape="round"><strong>Take Me Home</strong></a-button>
+      </router-link>
     </div>
   </div>
 </template>
 
-<script setup></script>
+<script setup>
+  import { MehOutlined } from "@ant-design/icons-vue";
+</script>
 
 <style lang="scss" scoped>
   @import "../assets/scss/variables.scss";
@@ -33,21 +35,70 @@
 
     .text-container {
       position: absolute;
-      top: 25vh;
-      right: 0;
+      top: 15vh;
+      right: 5vw;
       width: 40vw;
       height: 50vh;
-      text-align: center;
-    }
 
-    h1 {
-      color: #91e0b9;
-      font-size: 120px;
-      margin-bottom: 20px;
-    }
-    h2 {
-      color: #42a177;
-      font-size: 30px;
+      h1 {
+        font-size: 10vw;
+        background: linear-gradient(90deg, #71efb6, #66d0de);
+        background-clip: text;
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        cursor: default;
+        margin-bottom: 0;
+      }
+
+      h2 {
+        color: #fff;
+        font-size: 2.5vw;
+        margin-top: -10px;
+        margin-bottom: 10px;
+      }
+
+      h3 {
+        color: #6f6f6f;
+        font-size: 1.5vw;
+        margin-bottom: 20px;
+      }
+
+      .ant-btn {
+        height: 40px;
+        font-size: 1.5vw;
+        animation: pulse 3s linear infinite alternate;
+        color: #fff;
+        background: linear-gradient(90deg, #71efb6, #66d0de);
+        @keyframes pulse {
+          0% {
+            margin-top: 0px;
+          }
+          10% {
+            margin-top: 3px;
+          }
+          20% {
+            margin-top: 0px;
+          }
+          30% {
+            margin-top: 0px;
+          }
+          40% {
+            margin-top: 3px;
+          }
+          50% {
+            margin-top: 0px;
+          }
+          60% {
+            margin-top: 3px;
+          }
+          70% {
+            margin-top: 0px;
+          }
+          100% {
+            margin-top: 0px;
+          }
+        }
+      }
     }
   }
 </style>
