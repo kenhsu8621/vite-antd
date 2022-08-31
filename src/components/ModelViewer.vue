@@ -44,14 +44,14 @@
         <div class="tool-title">{{ $t("model_viewer.model_tools") }}</div>
         <a-space class="model-tools-container">
           <a-button shape="round" @click="toggleAnimation">
-            <span v-if="isStop"><caret-right-outlined :style="{ fontSize: '20px', paddingLeft: '5px' }" /></span>
-            <span v-if="!isStop"><pause-outlined :style="{ fontSize: '20px' }" /></span>
+            <span v-if="isStop"><CaretRightOutlined :style="{ fontSize: '20px', paddingLeft: '5px' }" /></span>
+            <span v-if="!isStop"><PauseOutlined :style="{ fontSize: '20px' }" /></span>
           </a-button>
           <a-button :class="{ 'active-model': !ishideGrid }" shape="round" @click="toggleGrid">
-            <span><table-outlined :style="{ fontSize: '20px' }" /></span
+            <span><TableOutlined :style="{ fontSize: '20px' }" /></span
           ></a-button>
           <a-button :class="{ 'active-model': !disableHints }" shape="round" @click="disableHints = !disableHints">
-            <span><question-outlined :style="{ fontSize: '20px' }" /></span
+            <span><QuestionOutlined :style="{ fontSize: '20px' }" /></span
           ></a-button>
         </a-space>
       </div>
@@ -60,13 +60,13 @@
     <div class="hint-box" v-if="showHints">
       <div class="hint-title">{{ $t("model_viewer.hints") }}</div>
       <div class="hint-item">
-        <redo-outlined /><span>{{ $t("model_viewer.rotate") }}</span>
+        <RedoOutlined /><span>{{ $t("model_viewer.rotate") }}</span>
       </div>
       <div class="hint-item">
-        <drag-outlined /><span>{{ $t("model_viewer.move") }}</span>
+        <DragOutlined /><span>{{ $t("model_viewer.move") }}</span>
       </div>
       <div class="hint-item">
-        <zoom-in-outlined /><span>{{ $t("model_viewer.zoom") }}</span>
+        <ZoomInOutlined /><span>{{ $t("model_viewer.zoom") }}</span>
       </div>
     </div>
 
@@ -465,6 +465,7 @@
       text-align: center;
       font-size: 8vw;
       background: linear-gradient(90deg, #71efb6, #7aa4e0);
+      background-clip: text;
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       cursor: default;
@@ -534,16 +535,6 @@
         }
         .ant-btn {
           width: 60px;
-          background: $bgThreeQuartersOpacity;
-
-          &:hover,
-          &:focus {
-            color: rgba(0, 0, 0, 0.85);
-            border: 1px solid #ddd;
-          }
-          &:hover {
-            background: $mainLightgreen;
-          }
 
           i {
             font-size: 25px;
