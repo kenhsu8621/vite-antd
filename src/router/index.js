@@ -7,6 +7,11 @@ const routes = [
     name: "Home",
     component: () => import("/src/views/Home.vue")
   },
+  {
+    path: "/model_viewer",
+    name: "ModelViewer",
+    component: () => import("/src/components/ModelViewer.vue")
+  },
   // finally the default route, when none of the above matches: 
   {
     path: "/404",

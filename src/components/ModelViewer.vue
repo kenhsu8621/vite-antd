@@ -28,13 +28,13 @@
         <div class="tool-title">{{ $t("model_viewer.model_select") }}</div>
 
         <a-space class="model-select-container">
-          <a-button shape="round" @click="initializeModel(0)" :class="{ 'active-model': currentModel == 0 }"
+          <a-button shape="round" @click="initializeModel(0, false)" :class="{ 'active-model': currentModel == 0 }"
             ><i class="devicon-vuejs-plain"></i
           ></a-button>
-          <a-button shape="round" @click="initializeModel(1)" :class="{ 'active-model': currentModel == 1 }"
+          <a-button shape="round" @click="initializeModel(1, false)" :class="{ 'active-model': currentModel == 1 }"
             ><i class="devicon-threejs-original"></i
           ></a-button>
-          <a-button shape="round" @click="initializeModel(2)" :class="{ 'active-model': currentModel == 2 }"
+          <a-button shape="round" @click="initializeModel(2, false)" :class="{ 'active-model': currentModel == 2 }"
             ><i class="devicon-vscode-plain"></i
           ></a-button>
         </a-space>
@@ -53,6 +53,18 @@
           <a-button :class="{ 'active-model': !disableHints }" shape="round" @click="disableHints = !disableHints">
             <span><QuestionOutlined :style="{ fontSize: '20px' }" /></span
           ></a-button>
+          <a-button
+            :class="{ 'active-model': isRotating }"
+            shape="round"
+            @click="initializeModel(null, isRotating ? false : true)"
+          >
+            <span><RedoOutlined :style="{ fontSize: '20px' }" /></span
+          ></a-button>
+          <router-link to="/model_viewer" target="_blank">
+            <a-button shape="round">
+              <span><FullscreenOutlined :style="{ fontSize: '20px' }" /></span
+            ></a-button>
+          </router-link>
         </a-space>
       </div>
     </div>
@@ -117,6 +129,7 @@
     ZoomInOutlined,
     DownCircleOutlined,
     UpCircleOutlined,
+    FullscreenOutlined,
   } from "@ant-design/icons-vue";
   import CustomSpin from "./CustomSpin.vue";
   import { defineComponent, nextTick } from "vue";
@@ -134,6 +147,7 @@
       ZoomInOutlined,
       DownCircleOutlined,
       UpCircleOutlined,
+      FullscreenOutlined,
       CustomSpin,
     },
     data() {
@@ -149,6 +163,7 @@
         isClicked: false,
         selectedColor: 0,
         isChanging: false,
+        isRotating: false,
         currentModel: 0,
         colorList: [
           {
@@ -197,14 +212,15 @@
             id: 5,
             name: "bg-black",
             value: "#333",
-            background:
-              "linear-gradient(45deg, rgba(0,85,83,1) 0%, rgba(27,27,27,1) 30%, rgba(33,33,33,1) 71%, rgba(0,18,119,1) 100%)",
+            // background:
+            //   "linear-gradient(45deg, rgba(0,85,83,1) 0%, rgba(27,27,27,1) 30%, rgba(33,33,33,1) 71%, rgba(0,18,119,1) 100%)",
+            background: "rgb(36,36,36)",
           },
         ],
       };
     },
     mounted() {
-      this.initializeModel(0); // 初始化3D模型
+      this.initializeModel(0, false); // 初始化3D模型
       this.dragElement(this.$refs.toolBox); // 將側邊工具欄設為可拖曳
 
       window.addEventListener("scroll", () => {
@@ -214,7 +230,8 @@
       });
     },
     methods: {
-      initializeModel(modelType) {
+      initializeModel(modelType, rotateModel) {
+        this.isRotating = rotateModel;
         nextTick(() => {
           this.clearPreviousModel();
           clock = new THREE.Clock();
@@ -222,7 +239,8 @@
           // 建立場景
           const scene = new THREE.Scene();
           const renderer = new THREE.WebGLRenderer({ antialias: true });
-          renderer.setSize(this.$refs.modelCanvas.clientWidth, this.$refs.modelCanvas.clientWidth / 2);
+          // renderer.setSize(this.$refs.modelCanvas.clientWidth, this.$refs.modelCanvas.clientWidth / 2);
+          renderer.setSize(this.$refs.modelCanvas.clientWidth, this.$refs.modelCanvas.clientHeight);
           // renderer.toneMapping = THREE.ReinhardToneMapping;
           // renderer.toneMappingExposure = 2.3;
           renderer.outputEncoding = THREE.sRGBEncoding;
@@ -246,11 +264,11 @@
           const loader = new GLTFLoader();
           let model;
 
-          const modelSrc = ["/static/models/vue.glb", "/static/models/threejs.glb", "/static/models/razer.glb"];
-          this.currentModel = modelType;
+          const modelSrc = ["/static/models/vue.glb", "/static/models/threejs.glb", "/static/models/zenbook.glb"];
+          this.currentModel = modelType ?? this.currentModel;
           loader.load(
             // resource URL
-            modelSrc[modelType],
+            modelSrc[this.currentModel],
             // called when the resource is loaded
             (gltf) => {
               model = gltf.scene;
@@ -315,14 +333,14 @@
 
           // 即時視窗更新
           function animate() {
-            // model.rotation.y += 0.01;
-            setTimeout(() => {
-              requestAnimationFrame(animate);
-              const delta = clock.getDelta();
-              if (mixer) mixer.update(delta);
-              controls.update();
-              renderer.render(scene, camera);
-            }, 10);
+            if (rotateModel) model.rotation.y += 0.02;
+            // setTimeout(() => {
+            requestAnimationFrame(animate);
+            const delta = clock.getDelta();
+            if (mixer) mixer.update(delta);
+            controls.update();
+            renderer.render(scene, camera);
+            // }, 10);
           }
         });
       },
@@ -371,7 +389,6 @@
       setClicked() {
         if (!this.disableHints) this.showHints = true;
         this.isClicked = true;
-        this.ishideGrid = true;
         this.$refs.toolBox.classList.add("fade-in");
         this.$refs.techiqueList.classList.add("fade-in-right");
         this.$refs.hello.classList.add("fade-out");
@@ -425,7 +442,7 @@
       },
 
       scrollToAnchor(location) {
-        window.scrollTo({ top: location == "top" ? 0 : window.innerHeight - 80, behavior: "smooth" });
+        window.scrollTo({ top: location == "top" ? 0 : window.innerHeight - 90, behavior: "smooth" });
       },
     },
   });
@@ -448,11 +465,13 @@
 
     .model-canvas {
       width: 90vw;
+      height: calc(100vh - 20px);
       margin: auto;
       padding-top: 70px;
       display: flex;
       justify-content: center;
       text-align: center;
+      overflow: hidden;
     }
 
     .hello {
