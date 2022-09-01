@@ -60,7 +60,7 @@
           >
             <span><RedoOutlined :style="{ fontSize: '20px' }" /></span
           ></a-button>
-          <router-link to="/model_viewer" target="_blank">
+          <router-link :to="{ name: 'ModelViewer' }" target="_blank">
             <a-button shape="round">
               <span><FullscreenOutlined :style="{ fontSize: '20px' }" /></span
             ></a-button>
@@ -264,7 +264,7 @@
           const loader = new GLTFLoader();
           let model;
 
-          const modelSrc = ["/static/models/vue.glb", "/static/models/threejs.glb", "/static/models/zenbook.glb"];
+          const modelSrc = ["./static/models/vue.glb", "./static/models/threejs.glb", "./static/models/zenbook.glb"];
           this.currentModel = modelType ?? this.currentModel;
           loader.load(
             // resource URL
