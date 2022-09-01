@@ -1,3 +1,8 @@
+<script setup>
+  import Header from "../components/Header.vue";
+  import ModelViewer from "../components/ModelViewer.vue";
+</script>
+
 <template>
   <div class="layout">
     <Header></Header>
@@ -26,12 +31,6 @@
     </section>
   </div>
 </template>
-
-<script setup>
-  import { ref, onMounted } from "vue";
-  import Header from "../components/Header.vue";
-  import ModelViewer from "../components/ModelViewer.vue";
-</script>
 
 <style lang="scss" scoped>
   @import "../assets/scss/variables.scss";

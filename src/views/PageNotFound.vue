@@ -1,3 +1,7 @@
+<script setup>
+  import { MehOutlined } from "@ant-design/icons-vue";
+</script>
+
 <template>
   <div class="layout">
     <div class="text-container">
@@ -10,10 +14,6 @@
     </div>
   </div>
 </template>
-
-<script setup>
-  import { MehOutlined } from "@ant-design/icons-vue";
-</script>
 
 <style lang="scss" scoped>
   @import "../assets/scss/variables.scss";
