@@ -1,119 +1,3 @@
-<template>
-  <div class="model-viewer" id="modelViewer" ref="modelViewer">
-    <!-- <div class="transition-mask" refs="transitionMask" v-show="isChanging"></div> -->
-    <CustomSpin v-show="isChanging" :size="30"></CustomSpin>
-    <div class="model-canvas" ref="modelCanvas" @mousedown="setClicked" @mouseup="showHints = false"></div>
-    <div class="hello" ref="hello" v-if="showHello">
-      <span style="color: #fff">{{ $t("model_viewer.hello") }}</span>
-    </div>
-
-    <div class="tool-box" ref="toolBox" @mousedown="setGrabbing(true)" @mouseup="setGrabbing(false)">
-      <div class="draggable-indicator"></div>
-      <div class="color-picker">
-        <div class="tool-title">{{ $t("model_viewer.color_picker") }}</div>
-        <a-space class="color-picker-container">
-          <div class="color-picker-grid" v-for="color in colorList">
-            <button
-              class="color-picker-btn"
-              :style="{ background: color.value }"
-              @click="changeViewerBackground(color.background)"
-            >
-              &nbsp;
-            </button>
-          </div>
-        </a-space>
-      </div>
-
-      <div class="model-select">
-        <div class="tool-title">{{ $t("model_viewer.model_select") }}</div>
-
-        <a-space class="model-select-container">
-          <a-button shape="round" @click="initializeModel(0, false)" :class="{ 'active-model': currentModel == 0 }"
-            ><i class="devicon-vuejs-plain"></i
-          ></a-button>
-          <a-button shape="round" @click="initializeModel(1, false)" :class="{ 'active-model': currentModel == 1 }"
-            ><i class="devicon-threejs-original"></i
-          ></a-button>
-          <a-button shape="round" @click="initializeModel(2, false)" :class="{ 'active-model': currentModel == 2 }"
-            ><i class="devicon-vscode-plain"></i
-          ></a-button>
-        </a-space>
-      </div>
-
-      <div class="model-tools">
-        <div class="tool-title">{{ $t("model_viewer.model_tools") }}</div>
-        <a-space class="model-tools-container">
-          <a-button shape="round" @click="toggleAnimation">
-            <span v-if="isStop"><CaretRightOutlined :style="{ fontSize: '20px', paddingLeft: '5px' }" /></span>
-            <span v-if="!isStop"><PauseOutlined :style="{ fontSize: '20px' }" /></span>
-          </a-button>
-          <a-button :class="{ 'active-model': !ishideGrid }" shape="round" @click="toggleGrid">
-            <span><TableOutlined :style="{ fontSize: '20px' }" /></span
-          ></a-button>
-          <a-button :class="{ 'active-model': !disableHints }" shape="round" @click="disableHints = !disableHints">
-            <span><QuestionOutlined :style="{ fontSize: '20px' }" /></span
-          ></a-button>
-          <a-button
-            :class="{ 'active-model': isRotating }"
-            shape="round"
-            @click="initializeModel(null, isRotating ? false : true)"
-          >
-            <span><RedoOutlined :style="{ fontSize: '20px' }" /></span
-          ></a-button>
-          <router-link :to="{ name: 'ModelViewer' }" target="_blank">
-            <a-button shape="round">
-              <span><FullscreenOutlined :style="{ fontSize: '20px' }" /></span
-            ></a-button>
-          </router-link>
-        </a-space>
-      </div>
-    </div>
-
-    <div class="hint-box" v-if="showHints">
-      <div class="hint-title">{{ $t("model_viewer.hints") }}</div>
-      <div class="hint-item">
-        <RedoOutlined /><span>{{ $t("model_viewer.rotate") }}</span>
-      </div>
-      <div class="hint-item">
-        <DragOutlined /><span>{{ $t("model_viewer.move") }}</span>
-      </div>
-      <div class="hint-item">
-        <ZoomInOutlined /><span>{{ $t("model_viewer.zoom") }}</span>
-      </div>
-    </div>
-
-    <div class="technique-list" ref="techiqueList">
-      <label>made with</label>
-      <a href="https://threejs.org/" target="_blank">
-        <a-tooltip title="three.js" color="rgba(255, 255, 255, 0.2)">
-          <i class="devicon-threejs-original"></i> </a-tooltip
-      ></a>
-      <span class="divider">+</span>
-      <a href="https://www.rhino3d.com/" target="_blank">
-        <a-tooltip title="rhino3d" color="rgba(255, 255, 255, 0.2)">
-          <img class="custom-icon" src="../assets/images/rhino.svg" alt="kh-logo" /> </a-tooltip
-      ></a>
-      <span class="divider">+</span>
-      <a href="https://www.blender.org/" target="_blank">
-        <a-tooltip title="blender" color="rgba(255, 255, 255, 0.2)">
-          <i class="devicon-blender-original"></i> </a-tooltip
-      ></a>
-    </div>
-
-    <DownCircleOutlined
-      class="scroll-btn scroll-down"
-      :class="{ 'fade-in': !isHideScollDown }"
-      v-if="isClicked"
-      @click="scrollToAnchor('bottom')"
-    />
-    <UpCircleOutlined
-      class="scroll-btn scroll-to-top"
-      :class="{ 'fade-in': isHideScollDown }"
-      @click="scrollToAnchor('top')"
-    />
-  </div>
-</template>
-
 <script>
   import * as THREE from "three";
   import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
@@ -162,7 +46,7 @@
         disableHints: false,
         isClicked: false,
         selectedColor: 0,
-        isChanging: false,
+        isLoading: false,
         isRotating: false,
         currentModel: 0,
         colorList: [
@@ -231,6 +115,8 @@
     },
     methods: {
       initializeModel(modelType, rotateModel) {
+        this.isLoading = true;
+
         this.isRotating = rotateModel;
         nextTick(() => {
           this.clearPreviousModel();
@@ -264,7 +150,7 @@
           const loader = new GLTFLoader();
           let model;
 
-          const modelSrc = ["./static/models/vue.glb", "./static/models/threejs.glb", "./static/models/zenbook.glb"];
+          const modelSrc = ["./static/models/vue.glb", "./static/models/threejs.glb", "./static/models/razer_0.9.glb"];
           this.currentModel = modelType ?? this.currentModel;
           loader.load(
             // resource URL
@@ -285,6 +171,7 @@
             },
             (xhr) => {
               // console.log(((xhr.loaded / xhr.total) * 100).toFixed(0));
+              this.isLoading = false;
             },
             (error) => {
               console.error("An error happened", error);
@@ -369,11 +256,11 @@
 
       changeViewerBackground(name) {
         this.$refs.modelViewer.style.opacity = 0.7;
-        this.isChanging = true;
+        this.isLoading = true;
         setTimeout(() => {
           this.$refs.modelViewer.style.opacity = 1;
           this.$refs.modelViewer.style.background = name;
-          this.isChanging = false;
+          this.isLoading = false;
         }, 1000);
       },
 
@@ -447,6 +334,122 @@
     },
   });
 </script>
+
+<template>
+  <div class="model-viewer" id="modelViewer" ref="modelViewer">
+    <!-- <div class="transition-mask" refs="transitionMask" v-show="isLoading"></div> -->
+    <CustomSpin v-show="isLoading" :size="30"></CustomSpin>
+    <div class="model-canvas" ref="modelCanvas" @mousedown="setClicked" @mouseup="showHints = false"></div>
+    <div class="hello" ref="hello" v-if="showHello">
+      <span style="color: #fff">{{ $t("model_viewer.hello") }}</span>
+    </div>
+
+    <div class="tool-box" ref="toolBox" @mousedown="setGrabbing(true)" @mouseup="setGrabbing(false)">
+      <div class="draggable-indicator"></div>
+      <div class="color-picker">
+        <div class="tool-title">{{ $t("model_viewer.color_picker") }}</div>
+        <a-space class="color-picker-container">
+          <div class="color-picker-grid" v-for="color in colorList">
+            <button
+              class="color-picker-btn"
+              :style="{ background: color.value }"
+              @click="changeViewerBackground(color.background)"
+            >
+              &nbsp;
+            </button>
+          </div>
+        </a-space>
+      </div>
+
+      <div class="model-select">
+        <div class="tool-title">{{ $t("model_viewer.model_select") }}</div>
+
+        <a-space class="model-select-container">
+          <a-button shape="round" @click="initializeModel(0, false)" :class="{ 'active-model': currentModel == 0 }"
+            ><i class="devicon-vuejs-plain"></i
+          ></a-button>
+          <a-button shape="round" @click="initializeModel(1, false)" :class="{ 'active-model': currentModel == 1 }"
+            ><i class="devicon-threejs-original"></i
+          ></a-button>
+          <a-button shape="round" @click="initializeModel(2, false)" :class="{ 'active-model': currentModel == 2 }"
+            ><img src="../assets/images/razer.svg"
+          /></a-button>
+        </a-space>
+      </div>
+
+      <div class="model-tools">
+        <div class="tool-title">{{ $t("model_viewer.model_tools") }}</div>
+        <a-space class="model-tools-container">
+          <a-button shape="round" @click="toggleAnimation">
+            <span v-if="isStop"><CaretRightOutlined :style="{ fontSize: '20px', paddingLeft: '5px' }" /></span>
+            <span v-if="!isStop"><PauseOutlined :style="{ fontSize: '20px' }" /></span>
+          </a-button>
+          <a-button :class="{ 'active-model': !ishideGrid }" shape="round" @click="toggleGrid">
+            <span><TableOutlined :style="{ fontSize: '20px' }" /></span
+          ></a-button>
+          <a-button :class="{ 'active-model': !disableHints }" shape="round" @click="disableHints = !disableHints">
+            <span><QuestionOutlined :style="{ fontSize: '20px' }" /></span
+          ></a-button>
+          <a-button
+            :class="{ 'active-model': isRotating }"
+            shape="round"
+            @click="initializeModel(null, isRotating ? false : true)"
+          >
+            <span><RedoOutlined :style="{ fontSize: '20px' }" /></span
+          ></a-button>
+          <router-link :to="{ name: 'ModelViewer' }" target="_blank">
+            <a-button shape="round">
+              <span><FullscreenOutlined :style="{ fontSize: '20px' }" /></span
+            ></a-button>
+          </router-link>
+        </a-space>
+      </div>
+    </div>
+
+    <div class="hint-box" v-if="showHints">
+      <div class="hint-title">{{ $t("model_viewer.hints") }}</div>
+      <div class="hint-item">
+        <RedoOutlined /><span>{{ $t("model_viewer.rotate") }}</span>
+      </div>
+      <div class="hint-item">
+        <DragOutlined /><span>{{ $t("model_viewer.move") }}</span>
+      </div>
+      <div class="hint-item">
+        <ZoomInOutlined /><span>{{ $t("model_viewer.zoom") }}</span>
+      </div>
+    </div>
+
+    <div class="technique-list" ref="techiqueList">
+      <label>made with</label>
+      <a href="https://threejs.org/" target="_blank">
+        <a-tooltip title="three.js" color="rgba(255, 255, 255, 0.2)">
+          <i class="devicon-threejs-original"></i> </a-tooltip
+      ></a>
+      <span class="divider">+</span>
+      <a href="https://www.rhino3d.com/" target="_blank">
+        <a-tooltip title="rhino3d" color="rgba(255, 255, 255, 0.2)">
+          <img class="custom-icon" src="../assets/images/rhino.svg" alt="kh-logo" /> </a-tooltip
+      ></a>
+      <span class="divider">+</span>
+      <a href="https://www.blender.org/" target="_blank">
+        <a-tooltip title="blender" color="rgba(255, 255, 255, 0.2)">
+          <i class="devicon-blender-original"></i> </a-tooltip
+      ></a>
+    </div>
+
+    <DownCircleOutlined
+      class="scroll-btn scroll-down"
+      :class="{ 'fade-in': !isHideScollDown }"
+      v-if="isClicked"
+      @click="scrollToAnchor('bottom')"
+    />
+    <UpCircleOutlined
+      class="scroll-btn scroll-to-top"
+      :class="{ 'fade-in': isHideScollDown }"
+      @click="scrollToAnchor('top')"
+    />
+  </div>
+</template>
 
 <style lang="scss" scoped>
   @import "../assets/scss/variables.scss";
@@ -559,6 +562,12 @@
             font-size: 25px;
             font-weight: bold;
             color: #333;
+          }
+
+          img {
+            width: 25px;
+            margin-top: -3px;
+            margin-left: -3px;
           }
         }
         .active-model {
