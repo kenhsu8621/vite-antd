@@ -46,12 +46,10 @@
         </a>
       </a-col>
       <a-col :span="12" class="center">
-        <a-space :size="30">
-          <a class="nav-link">{{ $t("header.home") }}</a>
-          <a class="nav-link">{{ $t("header.catagories") }}</a>
-          <a class="nav-link">{{ $t("header.about") }}</a>
-          <a class="nav-link">{{ $t("header.links") }}</a>
-        </a-space>
+        <a class="nav-link">{{ $t("header.home") }}</a>
+        <a class="nav-link">{{ $t("header.catagories") }}</a>
+        <a class="nav-link">{{ $t("header.about") }}</a>
+        <a class="nav-link">{{ $t("header.links") }}</a>
       </a-col>
       <a-col :span="6" class="right">
         <div class="lang-select" :class="{ expand: expandLangList }">
@@ -93,7 +91,6 @@
     .center {
       display: flex;
       justify-content: center;
-
       .nav-link {
         font-size: 20px;
         height: 100%;
@@ -128,7 +125,7 @@
         padding: 6px;
         top: 16px;
         right: 15px;
-        color: $darkgrey;
+        color: $mainDarkgrey;
         background-color: $bgThreeQuartersOpacity;
         border-radius: 19px;
         border: 1px solid #ddd;
@@ -191,7 +188,7 @@
           }
 
           .btn-inactive {
-            color: $darkgrey;
+            color: $mainDarkgrey;
             background-color: transparent;
             border: 1px solid #ddd;
           }

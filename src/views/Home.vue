@@ -37,18 +37,17 @@
 
   .layout {
     min-height: 100vh;
-    background: rgb(36, 36, 36);
-
+    background: $mainDarkblue;
     .section-divider {
       height: 20px;
       background: linear-gradient(
         -90deg,
         rgb(24, 252, 176),
-        rgba(127, 255, 212, 1),
-        rgba(42, 55, 70, 1),
-        rgba(36, 36, 36, 1),
-        rgba(42, 55, 70, 1),
-        rgba(127, 255, 212, 1),
+        rgb(127, 255, 212),
+        rgb(20, 45, 80),
+        rgb(10, 25, 46),
+        rgb(20, 45, 80),
+        rgb(127, 255, 212),
         rgb(24, 252, 176)
       );
       background-size: 500% 500%;

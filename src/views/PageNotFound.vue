@@ -48,11 +48,11 @@
           margin-right: 5px;
           // transform: rotate(-0deg);
           animation: shake 2s ease-in-out infinite alternate;
-        }
 
-        @keyframes shake {
-          to {
-            transform: rotate(-15deg);
+          @keyframes shake {
+            to {
+              transform: rotate(-15deg);
+            }
           }
         }
       }
@@ -69,7 +69,6 @@
         font-size: 1.5vw;
         margin-bottom: 20px;
       }
-
       .ant-btn {
         height: 40px;
         font-size: 16px;
@@ -77,7 +76,7 @@
         background: linear-gradient(90deg, #2bef97, #17c0d6);
 
         &:hover {
-          background: linear-gradient(90deg, #2bef97, #7173ef);
+          background: linear-gradient(90deg, #2bef97, #8f91fe);
         }
       }
     }
