@@ -14,9 +14,9 @@ import { getAnalytics } from "firebase/analytics";
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
     apiKey: "AIzaSyABEXrvdXjAYdXGD87yQD2H1oQhUPviX94",
-    authDomain: "vite-antd.firebaseapp.com",
-    projectId: "vite-antd",
-    storageBucket: "vite-antd.appspot.com",
+    authDomain: "kenhsu-dev.firebaseapp.com",
+    projectId: "kenhsu-dev",
+    storageBucket: "kenhsu-dev.appspot.com",
     messagingSenderId: "331320821944",
     appId: "1:331320821944:web:7e9114586153f39ef7cc4d",
     measurementId: "G-JS1RXKD30S"
