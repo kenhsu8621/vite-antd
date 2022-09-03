@@ -24,11 +24,11 @@
 
 <style lang="scss" scoped>
   .backdrop {
+    position: fixed;
     height: 100vh;
     background: rgba(50, 50, 50, 0.3);
-    z-index: 999;
     .custom-spin {
-      position: absolute;
+      position: fixed;
       display: inline-block;
       font-size: 20px;
       width: 20px;

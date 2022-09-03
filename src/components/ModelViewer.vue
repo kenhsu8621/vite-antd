@@ -48,6 +48,7 @@
         selectedColor: 0,
         isLoading: false,
         isRotating: false,
+        isHome: false,
         currentModel: 0,
         colorList: [
           {
@@ -57,13 +58,6 @@
             background:
               "linear-gradient(45deg,rgba(199, 103, 150, 1) 0%,rgba(245, 196, 170, 1) 40%,rgba(222, 144, 180, 1) 71%,rgba(204, 69, 187, 1) 100%)",
           },
-          // {
-          //   id: 1,
-          //   name: "bg-yellow",
-          //   value: "#e8be5b",
-          //   background:
-          //     "linear-gradient(45deg, rgba(255,190,68,1) 0%, rgba(240,245,170,1) 40%, rgba(203,222,144,1) 85%, rgba(86,214,165,1) 100%)",
-          // },
           {
             id: 1,
             name: "bg-green",
@@ -98,7 +92,8 @@
             value: "#333",
             // background:
             //   "linear-gradient(45deg, rgba(0,85,83,1) 0%, rgba(27,27,27,1) 30%, rgba(33,33,33,1) 71%, rgba(0,18,119,1) 100%)",
-            background: "rgb(36,36,36)",
+            background:
+              "linear-gradient(45deg, rgba(36,36,36,1) 0%, rgba(51,51,51,1) 60%, rgba(85,85,85,1) 85%, rgba(111,111,111,1) 100%)",
           },
         ],
       };
@@ -106,6 +101,9 @@
     mounted() {
       this.initializeModel(0, false); // 初始化3D模型
       this.dragElement(this.$refs.toolBox); // 將側邊工具欄設為可拖曳
+      if (this.$route.name == "Home") {
+        this.isHome = true;
+      }
 
       window.addEventListener("scroll", () => {
         if (window.scrollY + 150 > window.innerHeight) {
@@ -192,8 +190,9 @@
 
           // 縮放、平移、旋轉等控制
           const controls = new OrbitControls(camera, renderer.domElement);
-          controls.minZoom = 1;
-          controls.maxZoom = 1.5;
+          // controls.minZoom = 1;
+          // controls.maxZoom = 1.5;
+          controls.enableZoom = false;
           controls.update();
 
           // 建立光源
@@ -254,12 +253,12 @@
         this.ishideGrid = !this.ishideGrid;
       },
 
-      changeViewerBackground(name) {
+      changeViewerBackground(background) {
         this.$refs.modelViewer.style.opacity = 0.7;
         this.isLoading = true;
         setTimeout(() => {
           this.$refs.modelViewer.style.opacity = 1;
-          this.$refs.modelViewer.style.background = name;
+          this.$refs.modelViewer.style.background = background;
           this.isLoading = false;
         }, 1000);
       },
@@ -336,12 +335,12 @@
 </script>
 
 <template>
-  <div class="model-viewer" id="modelViewer" ref="modelViewer">
+  <div class="model-viewer" ref="modelViewer" @mousedown="setClicked" @mouseup="showHints = false">
     <!-- <div class="transition-mask" refs="transitionMask" v-show="isLoading"></div> -->
     <CustomSpin v-show="isLoading" :size="30"></CustomSpin>
-    <div class="model-canvas" ref="modelCanvas" @mousedown="setClicked" @mouseup="showHints = false"></div>
-    <div class="hello" ref="hello" v-if="showHello">
-      <span style="color: #fff">{{ $t("model_viewer.hello") }}</span>
+    <div class="model-canvas" ref="modelCanvas"></div>
+    <div class="hello" ref="hello" v-show="showHello && isHome">
+      {{ $t("model_viewer.hello") }}
     </div>
 
     <div class="tool-box" ref="toolBox" @mousedown="setGrabbing(true)" @mouseup="setGrabbing(false)">
@@ -440,12 +439,13 @@
     <DownCircleOutlined
       class="scroll-btn scroll-down"
       :class="{ 'fade-in': !isHideScollDown }"
-      v-if="isClicked"
+      v-if="isClicked && isHome"
       @click="scrollToAnchor('bottom')"
     />
     <UpCircleOutlined
       class="scroll-btn scroll-to-top"
       :class="{ 'fade-in': isHideScollDown }"
+      v-if="isHome"
       @click="scrollToAnchor('top')"
     />
   </div>
@@ -457,6 +457,8 @@
   .model-viewer {
     position: relative;
     transition: 1s all;
+    height: 100vh;
+    width: 100vw;
     background: linear-gradient(
       135deg,
       rgba(204, 206, 213, 1) 0%,
@@ -467,14 +469,16 @@
     box-shadow: $mainBoxShadow;
 
     .model-canvas {
-      width: 90vw;
-      height: calc(100vh - 20px);
-      margin: auto;
-      padding-top: 70px;
-      display: flex;
-      justify-content: center;
-      text-align: center;
+      aspect-ratio: 2/1;
+      margin: 0 auto;
       overflow: hidden;
+
+      @media (max-width: 1440px) {
+        aspect-ratio: 16/9;
+      }
+      @media (max-width: 1024px) {
+        aspect-ratio: 5/3;
+      }
     }
 
     .hello {
@@ -561,7 +565,7 @@
           i {
             font-size: 25px;
             font-weight: bold;
-            color: #333;
+            color: $mainDarkgrey;
           }
 
           img {
@@ -700,7 +704,7 @@
 
     .scroll-down {
       position: absolute;
-      color: #333;
+      color: $mainDarkgrey;
       left: 35px;
       z-index: 999;
 
@@ -731,7 +735,6 @@
     }
 
     .fade-out {
-      // transform: translateY(-5vh);
       opacity: 0;
       transition: ease-in-out 2s;
     }
